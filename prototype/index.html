@@ -1,0 +1,416 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Learn-It</title>
+<style>
+:root{
+  --bg:#e9ebe7;--surface:#f6f7f4;--text:#1f2327;--muted:#555c63;--accent:#84cc16;--accent-ink:#13200a;
+  --accent-text:#3f6212;--focus:#4d7c0f;--accent-soft:#e2efc6;--border:#c3c8c0;--rule:#dde1d9;--edge:#454b52;
+  --good:#0b6b5f;--good-soft:#d5f2ec;--bad:#b3261e;--bad-soft:#fde3e0;
+  color-scheme:light;box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#131518;--surface:#1e2125;--text:#eceee9;--muted:#a6adb4;--accent:#a3e635;--accent-ink:#13200a;
+    --accent-text:#bef264;--focus:#bef264;--accent-soft:#2b3a14;--border:#3a3f45;--rule:#2a2e33;--edge:#9aa1a8;
+    --good:#6ee7d3;--good-soft:#103a36;--bad:#ffb4ab;--bad-soft:#4a1f1b;color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#131518;--surface:#1e2125;--text:#eceee9;--muted:#a6adb4;--accent:#a3e635;--accent-ink:#13200a;
+  --accent-text:#bef264;--focus:#bef264;--accent-soft:#2b3a14;--border:#3a3f45;--rule:#2a2e33;--edge:#9aa1a8;
+  --good:#6ee7d3;--good-soft:#103a36;--bad:#ffb4ab;--bad-soft:#4a1f1b;color-scheme:dark;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--surface);z-index:10}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--surface);border-bottom:1px solid var(--border)}
+.bar-in{max-width:640px;margin:0 auto;padding:10px 16px 0}
+.brand{display:flex;justify-content:space-between;align-items:baseline}
+.brand h1{margin:0;font-size:1.25rem;letter-spacing:-.02em}
+.brand span{color:var(--muted);font-size:.875rem}
+.tabs{display:flex;gap:4px;margin-top:6px}
+.tab{flex:1;min-height:44px;background:none;border:0;border-bottom:3px solid transparent;color:var(--muted);font:inherit;font-weight:600;cursor:pointer}
+.tab{font-size:.88rem}
+.tab[aria-selected="true"]{color:var(--accent-text);border-bottom-color:var(--accent)}
+main{max-width:640px;margin:0 auto;padding:16px}
+h2{font-size:1.1rem;margin:0 0 10px}
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:14px}
+label.f{display:block;font-weight:600;font-size:.9rem;margin-bottom:10px}
+input[type=text],textarea{display:block;width:100%;margin-top:4px;padding:10px 12px;min-height:44px;font:inherit;color:var(--text);background:var(--bg);border:1px solid var(--border);border-radius:8px}
+textarea{min-height:110px;resize:vertical}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.btn{min-height:44px;padding:0 18px;font:inherit;font-weight:600;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.muted{color:var(--muted);font-size:.9rem}
+details summary{cursor:pointer;font-weight:600;min-height:44px;display:flex;align-items:center}
+ul.list{list-style:none;margin:0;padding:0}
+.row{display:flex;gap:8px;align-items:center;padding:10px 0;border-top:1px solid var(--border)}
+.row:first-child{border-top:0}
+.rt{flex:1;min-width:0;display:flex;flex-direction:column;overflow-wrap:anywhere}
+.rt span{color:var(--muted);font-size:.9rem}
+.icon{width:44px;height:44px;border:0;background:none;color:var(--muted);font-size:1.4rem;border-radius:8px;cursor:pointer}
+.icon:hover{color:var(--bad)}
+.prog{height:6px;background:var(--accent-soft);border-radius:3px;overflow:hidden;margin:6px 0 14px}
+.prog i{display:block;height:100%;width:0;background:var(--accent);transition:width .2s}
+/* index-card look: red head line, blue ruled lines */
+.flash{display:flex;flex-direction:column;justify-content:center;width:100%;min-height:240px;padding:28px 22px;text-align:center;font:inherit;color:var(--text);
+  background:repeating-linear-gradient(to bottom,transparent 0 31px,var(--rule) 31px 32px),var(--surface);
+  border:1px solid var(--border);border-top:3px solid var(--edge);border-radius:6px;cursor:pointer;overflow-wrap:anywhere}
+.flash small{color:var(--muted);font-weight:600}
+.flash b{font-size:1.45rem;line-height:32px;font-weight:600;margin-top:8px}
+.flash.back{border-top-color:var(--accent)}
+.nav{display:flex;gap:8px;justify-content:space-between;align-items:center;margin-top:14px}
+.seg{display:flex;gap:8px;margin-bottom:12px}
+.seg label{flex:1;border:1px solid var(--border);border-radius:8px;padding:10px 12px;cursor:pointer;min-height:44px}
+.seg label:has(input:checked){border-color:var(--accent);background:var(--accent-soft)}
+.seg label:has(input:focus-visible){outline:3px solid var(--focus);outline-offset:2px}
+.seg input{margin-right:6px}
+.q{font-size:1.25rem;font-weight:600;margin:4px 0 14px;overflow-wrap:anywhere}
+.opt{display:block;width:100%;text-align:left;margin-bottom:8px;min-height:48px;padding:10px 14px;font:inherit;color:var(--text);background:var(--surface);border:1px solid var(--border);border-radius:8px;cursor:pointer}
+.opt.good,.fb.good{background:var(--good-soft);border-color:var(--good);color:var(--good)}
+.opt.bad,.fb.bad{background:var(--bad-soft);border-color:var(--bad);color:var(--bad)}
+.fb{display:flex;flex-direction:column;gap:2px;border:1px solid;border-radius:8px;padding:10px 14px;margin:6px 0 12px}
+.score{font-size:2.4rem;font-weight:700;letter-spacing:-.03em;margin:0}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:8px}
+@media (min-width:520px){.grid{grid-template-columns:repeat(3,1fr)}}
+.tile{min-height:84px;padding:10px;display:flex;align-items:center;justify-content:center;text-align:center;font:inherit;font-size:.95rem;color:var(--text);background:var(--surface);border:2px solid var(--border);border-radius:10px;cursor:pointer;overflow-wrap:anywhere;transition:transform .12s}
+.tile.sel{border-color:var(--accent);background:var(--accent-soft);transform:translateY(-2px)}
+.tile.good{border-color:var(--good);background:var(--good-soft);color:var(--good)}
+.tile.bad{border-color:var(--bad);background:var(--bad-soft);color:var(--bad)}
+.tile.done{visibility:hidden}
+@media (prefers-reduced-motion:reduce){.tile{transition:none}}
+</style>
+</head>
+<body>
+<header class="top"><div class="bar-in">
+  <div class="brand"><h1>Learn-It</h1><span id="count">0 cards</span></div>
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" data-tab="edit" aria-selected="true">Words</button>
+    <button class="tab" role="tab" data-tab="cards" aria-selected="false">Flashcards</button>
+    <button class="tab" role="tab" data-tab="match" aria-selected="false">Match</button>
+    <button class="tab" role="tab" data-tab="test" aria-selected="false">Test</button>
+  </div>
+</div></header>
+
+<main>
+<!-- WORDS -->
+<section class="view" id="view-edit">
+  <form class="panel" id="add" autocomplete="off">
+    <h2>Add a card</h2>
+    <label class="f">Term<input type="text" id="term" maxlength="2000" required></label>
+    <label class="f">Definition<input type="text" id="def" maxlength="4000" required></label>
+    <div class="actions"><button class="btn primary" type="submit">Add card</button><span class="muted">Press Enter to add quickly.</span></div>
+  </form>
+  <div class="panel">
+    <details>
+      <summary>Paste many cards at once</summary>
+      <p class="muted">One card per line: term - definition. A tab or a semicolon also works.</p>
+      <textarea id="bulk" aria-label="Cards to import"></textarea>
+      <div class="actions" style="margin-top:10px"><button class="btn" id="bulk-go" type="button">Import cards</button><span class="muted" id="bulk-msg" role="status"></span></div>
+    </details>
+  </div>
+  <div class="panel">
+    <h2>Your cards</h2>
+    <p class="muted" id="empty">No cards yet. Add one above, or load a sample set to try the app.</p>
+    <ul class="list" id="list"></ul>
+    <div class="actions" style="margin-top:12px">
+      <button class="btn" id="sample" type="button">Load sample set</button>
+      <button class="btn" id="clear" type="button">Clear all</button>
+    </div>
+  </div>
+</section>
+
+<!-- FLASHCARDS -->
+<section class="view" id="view-cards" hidden>
+  <div class="panel" id="fc-empty" hidden><p class="muted" style="margin:0">Add at least one card on the Words tab to start studying.</p></div>
+  <div id="fc-body" hidden>
+    <div class="actions" style="justify-content:space-between"><span id="fc-pos" class="muted"></span><button class="btn" id="fc-shuffle" type="button">Shuffle</button></div>
+    <div class="prog"><i id="fc-bar"></i></div>
+    <button class="flash" id="fc-card" type="button" aria-live="polite"><small id="fc-label">Term</small><b id="fc-text"></b></button>
+    <p class="muted" style="text-align:center">Tap the card to flip it.</p>
+    <div class="nav"><button class="btn" id="fc-prev" type="button">Previous</button><button class="btn primary" id="fc-next" type="button">Next</button></div>
+  </div>
+</section>
+
+<!-- MATCH -->
+<section class="view" id="view-match" hidden>
+  <div class="panel" id="g-empty" hidden><p class="muted" style="margin:0">Add at least 2 cards on the Words tab to play.</p></div>
+  <div id="g-body" hidden>
+    <div class="actions" style="justify-content:space-between"><span class="muted"><span id="g-prog" role="status"></span> <span id="g-clock" aria-hidden="true"></span></span><button class="btn" id="g-new" type="button">New round</button></div>
+    <p class="muted">Tap a term, then tap its matching definition.</p>
+    <div class="grid" id="g-grid"></div>
+    <div class="panel" id="g-win" hidden><p class="score" id="g-final"></p><p class="muted" id="g-sum"></p><button class="btn primary" id="g-again" type="button">Play another round</button></div>
+  </div>
+</section>
+
+<!-- TEST -->
+<section class="view" id="view-test" hidden>
+  <div class="panel" id="t-setup">
+    <h2>Take a test</h2>
+    <div class="seg">
+      <label><input type="radio" name="mode" value="mc" id="m-mc" checked>Multiple choice</label>
+      <label><input type="radio" name="mode" value="write" id="m-write">Written</label>
+    </div>
+    <p class="muted" id="t-hint"></p>
+    <button class="btn primary" id="t-start" type="button">Start test</button>
+  </div>
+  <div class="panel" id="t-run" hidden>
+    <div class="muted" id="t-prog"></div>
+    <div class="prog"><i id="t-bar"></i></div>
+    <div class="muted" id="t-label"></div>
+    <div class="q" id="t-prompt"></div>
+    <div id="t-opts"></div>
+    <form id="t-write" autocomplete="off">
+      <label class="f">Your answer<input type="text" id="t-input" maxlength="2000"></label>
+      <div class="actions"><button class="btn primary" type="submit" id="t-check">Check answer</button><button class="btn" type="button" id="t-skip">I don’t know</button></div>
+    </form>
+    <div class="fb" id="t-fb" role="status" hidden></div>
+    <button class="btn primary" id="t-next" type="button" hidden>Next</button>
+  </div>
+  <div class="panel" id="t-done" hidden>
+    <p class="score" id="t-score"></p>
+    <p class="muted" id="t-pct"></p>
+    <div id="t-missed"></div>
+    <div class="actions" style="margin-top:12px"><button class="btn primary" id="t-retry" type="button">Retry missed</button><button class="btn" id="t-new" type="button">New test</button></div>
+  </div>
+</section>
+</main>
+
+<script>
+(function(){
+"use strict";
+var KEY="learnit:v1", cards=[];
+try{var raw=localStorage.getItem(KEY);if(raw){var p=JSON.parse(raw);if(Array.isArray(p))cards=p.filter(function(c){return c&&typeof c.id==="string"&&typeof c.t==="string"&&typeof c.d==="string"}).slice(0,1000)}}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(cards))}catch(e){}}
+function $(s){return document.querySelector(s)}
+function esc(s){return String(s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
+function uid(){return Math.random().toString(36).slice(2,10)+Date.now().toString(36)}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t}return a}
+function norm(s){return s.toLowerCase().normalize("NFKD").replace(/[^\p{L}\p{N}\s]/gu,"").replace(/\s+/g," ").trim()}
+function add(t,d){if(cards.length>=1000)return false;cards.push({id:uid(),t:t.slice(0,2000),d:d.slice(0,4000)});return true}
+
+/* tabs */
+function setTab(t){
+  document.querySelectorAll(".tab").forEach(function(b){b.setAttribute("aria-selected",String(b.dataset.tab===t))});
+  document.querySelectorAll(".view").forEach(function(v){v.hidden=v.id!=="view-"+t});
+  if(t==="cards")renderFc();if(t==="match")renderMatch();if(t==="test")renderSetup();
+}
+document.querySelectorAll(".tab").forEach(function(b){b.addEventListener("click",function(){setTab(b.dataset.tab)})});
+
+/* words */
+function renderList(){
+  $("#count").textContent=cards.length+(cards.length===1?" card":" cards");
+  $("#empty").hidden=cards.length>0;
+  $("#list").innerHTML=cards.map(function(c){
+    return '<li class="row"><div class="rt"><strong>'+esc(c.t)+'</strong><span>'+esc(c.d)+'</span></div>'+
+    '<button class="icon" type="button" data-del="'+esc(c.id)+'" aria-label="Delete card '+esc(c.t)+'">×</button></li>';
+  }).join("");
+}
+$("#add").addEventListener("submit",function(e){
+  e.preventDefault();
+  var t=$("#term").value.trim(),d=$("#def").value.trim();
+  if(!t||!d)return;
+  add(t,d);save();renderList();$("#term").value="";$("#def").value="";$("#term").focus();
+});
+$("#list").addEventListener("click",function(e){
+  var b=e.target.closest("[data-del]");if(!b)return;
+  cards=cards.filter(function(c){return c.id!==b.dataset.del});save();renderList();
+});
+$("#bulk-go").addEventListener("click",function(){
+  var n=0;
+  $("#bulk").value.split(/\r?\n/).forEach(function(ln){
+    var m=ln.match(/^(.+?)(?:\t| [-–—] |;)(.+)$/);
+    if(m&&m[1].trim()&&m[2].trim()&&add(m[1].trim(),m[2].trim()))n++;
+  });
+  save();renderList();
+  $("#bulk-msg").textContent=n?"Added "+n+(n===1?" card.":" cards."):"No cards found. Use the format “term - definition”, one per line.";
+  if(n)$("#bulk").value="";
+});
+$("#sample").addEventListener("click",function(){
+  [["Photosynthesis","How plants turn light, water and CO₂ into sugar and oxygen"],
+   ["Mitochondria","The organelle that makes most of a cell’s ATP"],
+   ["Osmosis","Movement of water across a semi-permeable membrane"],
+   ["Enzyme","A protein that speeds up a chemical reaction"],
+   ["DNA","The molecule that carries genetic instructions"],
+   ["Ribosome","The cell structure that builds proteins"]].forEach(function(x){add(x[0],x[1])});
+  save();renderList();
+});
+var armed=false,tm;
+function resetClear(){armed=false;$("#clear").textContent="Clear all"}
+$("#clear").addEventListener("click",function(){
+  if(!armed){armed=true;$("#clear").textContent="Tap again to delete all";tm=setTimeout(resetClear,3000);return}
+  clearTimeout(tm);cards=[];save();resetClear();renderList();
+});
+
+/* flashcards */
+var fc={order:[],i:0,flip:false};
+function renderFc(){
+  var has=cards.length>0;$("#fc-empty").hidden=has;$("#fc-body").hidden=!has;if(!has)return;
+  var ids=cards.map(function(c){return c.id});
+  if(fc.order.length!==ids.length||!ids.every(function(id){return fc.order.indexOf(id)>-1})){fc.order=ids;fc.i=0;fc.flip=false}
+  var c=cards.filter(function(x){return x.id===fc.order[fc.i]})[0];
+  $("#fc-card").classList.toggle("back",fc.flip);
+  $("#fc-label").textContent=fc.flip?"Definition":"Term";
+  $("#fc-text").textContent=fc.flip?c.d:c.t;
+  $("#fc-pos").textContent="Card "+(fc.i+1)+" of "+fc.order.length;
+  $("#fc-bar").style.width=((fc.i+1)/fc.order.length*100)+"%";
+  $("#fc-prev").disabled=fc.i===0;$("#fc-next").disabled=fc.i===fc.order.length-1;
+}
+$("#fc-card").addEventListener("click",function(){fc.flip=!fc.flip;renderFc()});
+$("#fc-prev").addEventListener("click",function(){if(fc.i>0){fc.i--;fc.flip=false;renderFc()}});
+$("#fc-next").addEventListener("click",function(){if(fc.i<fc.order.length-1){fc.i++;fc.flip=false;renderFc()}});
+$("#fc-shuffle").addEventListener("click",function(){fc.order=shuffle(cards.map(function(c){return c.id}));fc.i=0;fc.flip=false;renderFc()});
+
+/* test */
+var T=null;
+function showT(){
+  $("#t-setup").hidden=!!T;
+  $("#t-run").hidden=!(T&&T.i<T.qs.length);
+  $("#t-done").hidden=!(T&&T.i>=T.qs.length);
+}
+function renderSetup(){
+  var n=cards.length,mcOk=new Set(cards.map(function(c){return c.d})).size>=2;
+  $("#m-mc").disabled=!mcOk;
+  if(!mcOk&&$("#m-mc").checked)$("#m-write").checked=true;
+  $("#t-start").disabled=n===0;
+  $("#t-hint").textContent=n===0?"Add cards on the Words tab first."
+    :(mcOk?"":"Multiple choice needs at least 2 cards with different definitions. ")+"Your test will have "+n+(n===1?" question.":" questions.");
+  showT();
+}
+function startTest(pool,mode){
+  var qs=shuffle(pool).map(function(c){
+    var q={id:c.id,t:c.t,d:c.d};
+    if(mode==="mc"){
+      var others=shuffle(cards.filter(function(x){return x.id!==c.id&&x.d!==c.d})).slice(0,3);
+      q.opts=shuffle([c.d].concat(others.map(function(o){return o.d})));
+    }
+    return q;
+  });
+  T={mode:mode,qs:qs,i:0,score:0,missed:[],answered:false};
+  showT();renderQ();
+}
+function renderQ(){
+  var q=T.qs[T.i];T.answered=false;
+  $("#t-prog").textContent="Question "+(T.i+1)+" of "+T.qs.length;
+  $("#t-bar").style.width=(T.i/T.qs.length*100)+"%";
+  $("#t-fb").hidden=true;$("#t-next").hidden=true;
+  if(T.mode==="mc"){
+    $("#t-label").textContent="Choose the definition for:";$("#t-prompt").textContent=q.t;
+    $("#t-opts").hidden=false;$("#t-write").hidden=true;
+    $("#t-opts").innerHTML=q.opts.map(function(o,k){return '<button class="opt" type="button" data-k="'+k+'">'+esc(o)+'</button>'}).join("");
+  }else{
+    $("#t-label").textContent="Type the term for:";$("#t-prompt").textContent=q.d;
+    $("#t-opts").hidden=true;$("#t-write").hidden=false;
+    $("#t-input").value="";$("#t-input").disabled=false;$("#t-check").disabled=false;$("#t-skip").disabled=false;$("#t-input").focus();
+  }
+}
+function answer(ok){
+  if(T.answered)return;T.answered=true;
+  var q=T.qs[T.i];
+  if(ok)T.score++;else T.missed.push(q);
+  var fb=$("#t-fb");fb.hidden=false;fb.className="fb "+(ok?"good":"bad");
+  fb.innerHTML="<strong>"+(ok?"Correct":"Not quite")+"</strong>"+(ok?"":"<span>Answer: "+esc(T.mode==="mc"?q.d:q.t)+"</span>");
+  if(T.mode==="write"){$("#t-input").disabled=true;$("#t-check").disabled=true;$("#t-skip").disabled=true}
+  var nx=$("#t-next");nx.hidden=false;nx.textContent=T.i===T.qs.length-1?"See results":"Next";nx.focus();
+}
+$("#t-opts").addEventListener("click",function(e){
+  var b=e.target.closest(".opt");if(!b||T.answered)return;
+  var q=T.qs[T.i],ok=q.opts[+b.dataset.k]===q.d;
+  document.querySelectorAll("#t-opts .opt").forEach(function(o){
+    o.disabled=true;
+    if(q.opts[+o.dataset.k]===q.d)o.classList.add("good");
+  });
+  if(!ok)b.classList.add("bad");
+  answer(ok);
+});
+$("#t-write").addEventListener("submit",function(e){
+  e.preventDefault();if(T.answered)return;
+  var v=norm($("#t-input").value);if(!v)return;
+  answer(v===norm(T.qs[T.i].t));
+});
+$("#t-skip").addEventListener("click",function(){answer(false)});
+$("#t-next").addEventListener("click",function(){
+  T.i++;
+  if(T.i>=T.qs.length){
+    $("#t-score").textContent=T.score+" of "+T.qs.length+" correct";
+    $("#t-pct").textContent=Math.round(T.score/T.qs.length*100)+"%";
+    $("#t-retry").hidden=T.missed.length===0;
+    $("#t-missed").innerHTML=T.missed.length?"<h2>To review</h2><ul class='list'>"+T.missed.map(function(q){
+      return '<li class="row"><div class="rt"><strong>'+esc(q.t)+'</strong><span>'+esc(q.d)+'</span></div></li>';
+    }).join("")+"</ul>":"<p>Perfect score. Nothing to review.</p>";
+    showT();
+  }else renderQ();
+});
+$("#t-start").addEventListener("click",function(){
+  startTest(cards,$("#m-write").checked?"write":"mc");
+});
+$("#t-retry").addEventListener("click",function(){startTest(T.missed,T.mode)});
+$("#t-new").addEventListener("click",function(){T=null;renderSetup()});
+
+/* match game */
+var G=null,gtimer=null;
+function fmt(ms){var s=Math.floor(ms/1000);return Math.floor(s/60)+':'+('0'+(s%60)).slice(-2)}
+function tick(){if(G&&!G.end)$('#g-clock').textContent=fmt(Date.now()-G.start)}
+function sig(){return cards.map(function(c){return c.id}).join()}
+function paint(i){var b=$('#g-grid').children[i];if(!b)return;var s=G.tiles[i].s;b.className='tile'+(s?' '+s:'');b.disabled=(s==='done'||s==='good')}
+function updProg(){$('#g-prog').textContent=G.matched+' of '+G.pairs+' matched, '+G.mistakes+(G.mistakes===1?' miss':' misses')}
+function newRound(){
+  clearInterval(gtimer);
+  var pool=shuffle(cards).slice(0,Math.min(6,cards.length)),tiles=[];
+  pool.forEach(function(c){tiles.push({id:c.id,k:'t',text:c.t,s:''});tiles.push({id:c.id,k:'d',text:c.d,s:''})});
+  G={tiles:shuffle(tiles),sel:-1,mistakes:0,matched:0,pairs:pool.length,busy:false,start:Date.now(),end:0,sig:sig()};
+  $('#g-win').hidden=true;
+  var grid=$('#g-grid');grid.hidden=false;grid.textContent='';
+  G.tiles.forEach(function(t,i){var b=document.createElement('button');b.type='button';b.className='tile';b.dataset.i=i;b.textContent=t.text;grid.appendChild(b)});
+  updProg();tick();gtimer=setInterval(tick,500);
+}
+function renderMatch(){
+  var ok=cards.length>=2;
+  $('#g-empty').hidden=ok;$('#g-body').hidden=!ok;
+  if(!ok){clearInterval(gtimer);G=null;return}
+  if(!G||G.sig!==sig())newRound();
+}
+function win(){
+  G.end=Date.now();clearInterval(gtimer);
+  $('#g-grid').hidden=true;$('#g-win').hidden=false;
+  $('#g-final').textContent='Done in '+fmt(G.end-G.start);
+  $('#g-sum').textContent=G.pairs+' pairs matched with '+G.mistakes+(G.mistakes===1?' miss.':' misses.');
+}
+$('#g-grid').addEventListener('click',function(e){
+  var b=e.target.closest('.tile'),g=G;
+  if(!b||!g||g.busy)return;
+  var i=+b.dataset.i,t=g.tiles[i];
+  if(t.s==='done'||t.s==='good')return;
+  if(g.sel===i){t.s='';paint(i);g.sel=-1;return}
+  if(g.sel<0){g.sel=i;t.s='sel';paint(i);return}
+  var j=g.sel,o=g.tiles[j];
+  if(o.k===t.k){o.s='';paint(j);g.sel=i;t.s='sel';paint(i);return}
+  g.sel=-1;g.busy=true;
+  if(o.id===t.id){
+    o.s=t.s='good';g.matched++;paint(i);paint(j);updProg();
+    setTimeout(function(){
+      if(G!==g)return;
+      o.s=t.s='done';paint(i);paint(j);g.busy=false;
+      if(g.matched===g.pairs)win();else{var n=$('#g-grid .tile:not(.done)');if(n)n.focus()}
+    },350);
+  }else{
+    g.mistakes++;o.s=t.s='bad';paint(i);paint(j);updProg();
+    setTimeout(function(){if(G!==g)return;o.s=t.s='';paint(i);paint(j);g.busy=false},600);
+  }
+});
+$('#g-new').addEventListener('click',newRound);
+$('#g-again').addEventListener('click',newRound);
+
+renderList();
+})();
+</script>
+</body>
+</html>

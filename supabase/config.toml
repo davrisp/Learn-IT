@@ -1,0 +1,24 @@
+project_id = "learn-it"
+
+[api]
+enabled = true
+
+[db]
+port = 54322
+major_version = 17
+
+[auth]
+site_url = "http://localhost:3000"
+additional_redirect_urls = ["http://localhost:3000/auth/callback"]
+enable_signup = true
+minimum_password_length = 10
+
+[auth.email]
+enable_confirmations = true
+
+# Sign in with GitHub. To enable: create a GitHub OAuth App, export
+# GITHUB_CLIENT_ID / GITHUB_SECRET locally, then set enabled = true.
+[auth.external.github]
+enabled = false
+client_id = "env(GITHUB_CLIENT_ID)"
+secret = "env(GITHUB_SECRET)"
